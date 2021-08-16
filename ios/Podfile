@@ -12,6 +12,8 @@ target 'facebook2' do
     :hermes_enabled => false
   )
 
+  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
+
   target 'facebook2Tests' do
     inherit! :complete
     # Pods for testing

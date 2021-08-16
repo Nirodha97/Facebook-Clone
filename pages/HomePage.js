@@ -10,11 +10,12 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 
+import * as ImagePicker from "react-native-image-picker";
 class HomePage extends React.Component{
 
     constructor(props){
         super(props);
-        this.state = {text:'', mid: '', posts:[]}; 
+        this.state = {text:'', mid: '', posts:[], url:'', photo: null }; 
         this.post=this.post.bind(this);
         this.login= this.login.bind(this);
         this.register= this.register.bind(this);
@@ -61,6 +62,7 @@ class HomePage extends React.Component{
                {/* <Logo/> */}
                <ScrollView scrollEnabled={true} >
                 <TextBox onChangeText={(text) => this.setState({text: text})} Value={this.state.text} lable="Write a Post" placeholder="Whats on Your Mind"></TextBox>
+                <Button title="Choose a Photo" onPress={this.handlePhoto}/>
                 <Button title="POST" onPress={this.post}/>
                 
                 <FlatList
@@ -144,6 +146,13 @@ class HomePage extends React.Component{
         ).catch(
             err=> console.log(err)
         );
+    }
+
+    handlePhoto = () =>{
+        const options = {};
+        ImagePicker.launchImageLibrary(options, response=> {
+            console.log("Response= "+JSON.stringify(response));
+        });
     }
     
 }
