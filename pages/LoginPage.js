@@ -43,8 +43,8 @@ class LoginPage extends React.Component{
 
         firebase.auth().signInWithEmailAndPassword(email,password)
         .then(
-            function(){
-                navigate("Home")
+            function(data){
+                navigate("Home" , {uid: data.user.uid});
             },
             function(error){
                 var errorMessage = error.message;

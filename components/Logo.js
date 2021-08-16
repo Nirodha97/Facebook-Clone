@@ -13,8 +13,9 @@ class Logo extends React.Component{
 
 const style = StyleSheet.create({
     image:{
-        height:60,
-        width:'100%',
+        height:80,
+        width:'80%',
+        marginLeft:35,
         marginBottom:20,
         marginTop:10,
 
