@@ -8,6 +8,7 @@ import ToolBar from '../components/ToolBar';
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
+import "firebase/database";
 class SignupPage extends React.Component{
 
     constructor(props){
@@ -64,13 +65,22 @@ class SignupPage extends React.Component{
        let email = this.state.email;
        let contact = this.state.contact;
        let password = this.state.password; 
-
+       const {navigate} = this.props.navigation;
        console.log("Register Called...."+email+" "+password);
 
        firebase.auth().createUserWithEmailAndPassword(email,password)
        .then(
-           function(){
-                console.log("User Created Success !")
+           function(data){
+
+            firebase.database().ref('member/'+data.user.uid).set({
+                name: name,
+                email: email,
+                contact: contact
+            });
+                console.log("User Created Success !");
+                alert("Success !");
+                navigate("Login");
+                
            },
            function (error){
             console.log("Error Creating User "+error);
