@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "79891003676",
+    "firebase_url": "https://myfb2-8e2e6-default-rtdb.firebaseio.com",
+    "project_id": "myfb2-8e2e6",
+    "storage_bucket": "myfb2-8e2e6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:79891003676:android:37fbb22759d334ee53e2d9",
+        "android_client_info": {
+          "package_name": "com.facebook2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "79891003676-st2d3utaplspcv1jstv9lfk820u5lvk7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGLLd8m9330dexlOTS6-_1jhZV1piB5NM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "79891003676-st2d3utaplspcv1jstv9lfk820u5lvk7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
