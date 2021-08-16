@@ -78,7 +78,7 @@ class SignupPage extends React.Component{
                 contact: contact
             });
                 console.log("User Created Success !");
-                alert("Success !");
+                alert("Register Success !");
                 navigate("Login");
                 
            },
