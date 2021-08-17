@@ -56,6 +56,7 @@ class HomePage extends React.Component{
 
     render(){
         console.log(this.state.posts);
+        const {photo} = this.state;
         return(
             <View>
                
@@ -63,6 +64,13 @@ class HomePage extends React.Component{
                <ScrollView scrollEnabled={true} >
                 <TextBox onChangeText={(text) => this.setState({text: text})} Value={this.state.text} lable="Write a Post" placeholder="Whats on Your Mind"></TextBox>
                 <Button title="Choose a Photo" onPress={this.handlePhoto}/>
+
+
+             
+                { photo && (
+                    <Image  source={{uri: photo.uri}} style ={{width:100, height:100}}/>
+                )}
+
                 <Button title="POST" onPress={this.post}/>
                 
                 <FlatList
@@ -149,9 +157,17 @@ class HomePage extends React.Component{
     }
 
     handlePhoto = () =>{
+     
         const options = {};
         ImagePicker.launchImageLibrary(options, response=> {
-            console.log("Response= "+JSON.stringify(response));
+            const data = response.assets[0];
+           console.log("Response= "+data);
+            if(data.uri){
+                //alert(response.assets[0].uri);
+                this.setState({
+                    photo: data
+                });
+            }
         });
     }
     
