@@ -9,6 +9,7 @@ import TextBox from '../components/TextBox';
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
+import "firebase/storage";
 
 import * as ImagePicker from "react-native-image-picker";
 class HomePage extends React.Component{
@@ -41,7 +42,8 @@ class HomePage extends React.Component{
                         id: pid,
                         mid: mid,
                         post: text,
-                        likes: 0,
+                        photo: object.photo,
+                        likes: object.likes,
                         name: data.toJSON().name
                     });
 
@@ -77,6 +79,7 @@ class HomePage extends React.Component{
                         data={this.state.posts}
                         renderItem={
                             ({item, index})=>{
+                                let image = (item.photo)?{uri: item.photo} : require('../assests/default.jpg');
                                 return(
                                     <View style={style.postbox}>
                                         <View style={style.post_header}>
@@ -85,14 +88,21 @@ class HomePage extends React.Component{
                                         </View>
 
                                         <Text style={style.post_text}>{item.post}</Text>
-                                        <Image  source={ require('../assests/default.jpg')} style={style.post_image}/>
+                                        <Image  source={ image} style={style.post_image}/>
 
                                         <View style={style.like_bar}>
                                             <Text>{item.likes} Likes</Text>
                                         </View>
 
                                         <View style={style.button_bar}> 
-                                            <TouchableOpacity style={style.button}>
+                                            <TouchableOpacity style={style.button} 
+                                            onPress={()=>{
+                                                var ref = firebase.database().ref('posts/'+item.id+"/likes");
+                                                ref.transaction(function(likeCount){
+                                                    return (likeCount || 0)+1;
+                                                });
+                                            }}
+                                            >
                                                 <Image  source={ require('../assests/like.png')} style={style.button_icon}/>
                                                 <Text style={style.button_text}>Like</Text>
                                             </TouchableOpacity>
@@ -132,7 +142,9 @@ class HomePage extends React.Component{
     post(){
         let text = this.state.text;
         let mid = this.state.mid;
+        let url = this.state.url;
       
+        alert(url);
         fetch(
             'https://myfb2-8e2e6-default-rtdb.firebaseio.com/posts.json',
             {
@@ -140,7 +152,8 @@ class HomePage extends React.Component{
                 body: JSON.stringify(
                     {
                         post:text,
-                        mid: mid
+                        mid: mid,
+                        photo: url,
                     }
                 )
             }
@@ -158,18 +171,64 @@ class HomePage extends React.Component{
 
     handlePhoto = () =>{
      
+
+        //Image picker
         const options = {};
         ImagePicker.launchImageLibrary(options, response=> {
             const data = response.assets[0];
            console.log("Response= "+data);
             if(data.uri){
-                //alert(response.assets[0].uri);
                 this.setState({
                     photo: data
                 });
+
+                //Upload to firebase and Get the URL
+                //a) Image Object should Convert to base 64
+                //b) Converted base 64 format content should send to firebase
+
+                let name = data.fileName;
+                const image = data.uri;
+
+                const imageRef = firebase.storage().ref('posts').child(name);
+                this.uriToBlob(image)
+                .then((blob)=>{
+                    return imageRef.put(blob,{contentType: 'image/jpeg'});
+                })
+                .then(()=>{
+                    return imageRef.getDownloadURL();
+                })
+                .then((url)=>{
+                    console.log("URL = "+url);
+                    this.setState({
+                        url: url
+                    });
+                })
+                .catch((error)=>{
+                    console.log(error);
+                });
+
+
             }
         });
     }
+
+    uriToBlob = (uri) => {
+        return new Promise((resolve,reject)=>{
+            const xhr = new XMLHttpRequest();
+            xhr.onload = function(){
+                resolve(xhr.response)
+            };
+
+            xhr.onerror = function(){
+                reject(new Error('URI ti Blob Failed'));
+            }
+
+            xhr.responseType = 'blob';
+            xhr.open('GET',uri,true);
+            xhr.send(null);
+        });
+    }
+
     
 }
 
